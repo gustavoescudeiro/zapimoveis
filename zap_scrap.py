@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import time
-import datetime
+from datetime import date
 
 list_dataframezao = []
 headers = {'User-Agent': 'Mozilla/5.0'}
@@ -29,7 +29,7 @@ for pg in range(1,546):
         try:
             preco = preco.find('p', class_=['simple-card__price']).get_text()
             print(preco)
-            dict_infos['preco'] = preco.rstrip().replace(" ", "")
+            dict_infos['preco'] = preco.replace(" ", "")
         except:
             print(None)
 
@@ -108,5 +108,7 @@ today = date.today()
 hoje = today.strftime("%Y-%m-%d")
 dataframe_final = pd.concat(list_dataframezao, axis = 0)
 dataframe_final['data'] = hoje
+dataframe_final['preco'] = dataframe_final['preco'].replace("R$", "")
+dataframe_final['metragem'] = dataframe_final['metragem'].replace("m²", "")
 dataframe_final.to_csv('zapimoveis.csv', sep = ';', decimal = ',', index = False)
 print('a')
